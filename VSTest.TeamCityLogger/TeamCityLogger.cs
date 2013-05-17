@@ -77,6 +77,7 @@ namespace VSTest.TeamCityLogger
                 }
 
                 string name = e.Result.TestCase.FullyQualifiedName.Replace(e.Result.TestCase.DisplayName, e.Result.DisplayName);
+                name = EscapeString(name);
 
                 Console.WriteLine("##teamcity[testStarted name='{0}' captureStandardOutput='true']", name);
 
@@ -106,16 +107,21 @@ namespace VSTest.TeamCityLogger
             if (errorStackTrace == null)
                 return null;
 
-            return errorStackTrace
-                .Replace("|", "||")
-                .Replace("\r", "|r")
-                .Replace("\n", "|n")
-                .Replace("'", "|'")
-                .Replace(X, "|x")
-                .Replace(L, "|l")
-                .Replace(P, "|p")
-                .Replace("[", "|[")
-                .Replace("]", "|]");
+            return EscapeString(errorStackTrace);
+        }
+
+        private static string EscapeString(string str)
+        {
+            return str
+                    .Replace("|", "||")
+                    .Replace("\r", "|r")
+                    .Replace("\n", "|n")
+                    .Replace("'", "|'")
+                    .Replace(X, "|x")
+                    .Replace(L, "|l")
+                    .Replace(P, "|p")
+                    .Replace("[", "|[")
+                    .Replace("]", "|]");
         }
 
         /// <summary>
